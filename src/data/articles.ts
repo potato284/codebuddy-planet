@@ -205,3 +205,71 @@ export const sections: Section[] = [
 ]
 
 export const OFFICIAL_URL = 'https://www.codebuddy.ai/ide'
+
+/* ============ 常见 FAQ ============ */
+export interface FaqItem {
+  q: string
+  a: string
+}
+
+export const FAQ_ITEMS: FaqItem[] = [
+  {
+    q: 'CodeBuddy 是什么？',
+    a: 'CodeBuddy 是腾讯推出的 AI 编程助手与智能体开发工具，覆盖代码补全、技术对话、需求拆解、代码审查、测试部署等研发全流程，帮助你从想法更快走到产品上线。',
+  },
+  {
+    q: 'CodeBuddy 有哪些产品形态？',
+    a: '目前主要包括：CodeBuddy IDE（独立桌面开发环境）、IDE 插件（VS Code / JetBrains 等）、CodeBuddy Code（命令行 CLI 工具）以及 Craft 智能体等，覆盖从个人开发到团队协作的不同场景。',
+  },
+  {
+    q: '如何安装 CodeBuddy IDE？',
+    a: '前往官网 codebuddy.ai/ide，选择对应平台（Windows / macOS / Linux）的安装包下载安装即可，全程开箱即用；也可以先在官网了解各产品形态后再选择适合自己的方式。',
+  },
+  {
+    q: 'Craft 智能体能做什么？',
+    a: 'Craft 是 CodeBuddy 的核心智能体能力：输入一个需求，它可以帮你完成产品文档、原型设计、前后端代码、测试与部署的端到端交付，把「一句话」变成「一个产品」。',
+  },
+  {
+    q: '如何第一时间获取产品动态？',
+    a: '关注微信公众号「腾讯 CodeBuddy」，或常来本站「产品功能」板块逛逛，每次版本焕新、新能力上线都会第一时间同步到对应合集。',
+  },
+  {
+    q: '在哪里反馈问题与建议？',
+    a: '可以在微信公众号「腾讯 CodeBuddy」的文章评论区留言，或通过公众号后台私信反馈；也可以浏览下方「交流与反馈」板块的各个入口，与我们保持联系。',
+  },
+]
+
+/* ============ 交流与反馈 ============ */
+export interface FeedbackChannel {
+  icon: 'wechat' | 'feature' | 'practice' | 'globe'
+  title: string
+  desc: string
+  url: string
+}
+
+export const FEEDBACK_CHANNELS: FeedbackChannel[] = [
+  {
+    icon: 'wechat',
+    title: '微信公众号「腾讯 CodeBuddy」',
+    desc: '产品动态、教程与活动首发阵地，文末留言或后台私信即可反馈',
+    url: ALBUM_FEATURES,
+  },
+  {
+    icon: 'feature',
+    title: '产品功能合集',
+    desc: '浏览全部功能更新文章，了解 CodeBuddy 的最新能力',
+    url: ALBUM_FEATURES,
+  },
+  {
+    icon: 'practice',
+    title: '最佳实践合集',
+    desc: '系统学习 CodeBuddy 的实战用法，快速上手进阶',
+    url: ALBUM_PRACTICE,
+  },
+  {
+    icon: 'globe',
+    title: 'CodeBuddy 官网',
+    desc: '下载 IDE / CLI / 插件，开启你的 AI 开发体验',
+    url: OFFICIAL_URL,
+  },
+]

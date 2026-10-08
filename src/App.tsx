@@ -2,7 +2,14 @@ import { useEffect, useState } from 'react'
 import BuddyMascot from '@/components/BuddyMascot'
 import officialBuddy from '@/assets/buddy-official.png'
 import heroCutout from '@/assets/hero-cutout.png'
-import { sections, OFFICIAL_URL, type Article, type Section } from '@/data/articles'
+import {
+  sections,
+  OFFICIAL_URL,
+  FAQ_ITEMS,
+  FEEDBACK_CHANNELS,
+  type Article,
+  type Section,
+} from '@/data/articles'
 import { poseImage } from '@/lib/poses'
 import './App.css'
 
@@ -11,6 +18,48 @@ const NAV_ITEMS = [
   ...sections.map((s) => ({ id: s.id, label: s.nav })),
   { id: 'try', label: '快速体验通道' },
 ]
+
+/* Hero 左侧的功能模块 tab（FAQ / 交流与反馈） */
+const HERO_TABS = [
+  { id: 'faq', label: '常见 FAQ' },
+  { id: 'feedback', label: '交流与反馈' },
+]
+
+/* 滚动高亮监听：按页面板块顺序 */
+const SPY_IDS = [
+  'home',
+  ...sections.map((s) => s.id),
+  'faq',
+  'feedback',
+  'try',
+]
+
+const CHANNEL_ICONS = {
+  wechat: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+    </svg>
+  ),
+  feature: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z" />
+      <path d="M2 17l10 5 10-5" />
+      <path d="M2 12l10 5 10-5" />
+    </svg>
+  ),
+  practice: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+    </svg>
+  ),
+  globe: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M2 12h20" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </svg>
+  ),
+}
 
 function ArticleCard({
   article,
@@ -57,14 +106,15 @@ function ArticleCard({
 export default function App() {
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('home')
+  const [openFaq, setOpenFaq] = useState(0)
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 24)
       let current = 'home'
-      for (const item of NAV_ITEMS) {
-        const el = document.getElementById(item.id)
-        if (el && el.getBoundingClientRect().top <= 140) current = item.id
+      for (const id of SPY_IDS) {
+        const el = document.getElementById(id)
+        if (el && el.getBoundingClientRect().top <= 140) current = id
       }
       setActive(current)
     }
@@ -153,6 +203,18 @@ export default function App() {
                 浏览产品功能
               </a>
             </div>
+            <div className="hero-module-tabs">
+              <span className="module-tabs-label">更多模块</span>
+              {HERO_TABS.map((t) => (
+                <a
+                  key={t.id}
+                  href={`#${t.id}`}
+                  className={`hero-tab glass ${active === t.id ? 'active' : ''}`}
+                >
+                  {t.label}
+                </a>
+              ))}
+            </div>
             <div className="hero-stats">
               <div>
                 <strong>41+</strong>
@@ -205,6 +267,96 @@ export default function App() {
             </div>
           </section>
         ))}
+
+        {/* 常见 FAQ */}
+        <section id="faq" className="content-section">
+          <div className="section-head reveal">
+            <span
+              className="section-tag"
+              style={{ background: 'linear-gradient(135deg,#34d399,#22d3ee)' }}
+            >
+              常见 FAQ
+            </span>
+            <h2>常见问题，一站解答</h2>
+            <p>关于 CodeBuddy 的高频疑问，点击展开即可查看解答</p>
+          </div>
+          <div className="faq-list">
+            {FAQ_ITEMS.map((item, i) => (
+              <div
+                key={item.q}
+                className={`faq-item glass reveal ${openFaq === i ? 'open' : ''}`}
+                style={{ transitionDelay: `${i * 50}ms` }}
+              >
+                <button
+                  type="button"
+                  className="faq-q"
+                  onClick={() => setOpenFaq(openFaq === i ? -1 : i)}
+                >
+                  <span className="faq-q-text">
+                    <em className="faq-index">{String(i + 1).padStart(2, '0')}</em>
+                    {item.q}
+                  </span>
+                  <svg
+                    className="faq-arrow"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                <div className="faq-a">
+                  <p>{item.a}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 交流与反馈 */}
+        <section id="feedback" className="content-section">
+          <div className="section-head reveal">
+            <span
+              className="section-tag"
+              style={{ background: 'linear-gradient(135deg,#f472b6,#a78bfa)' }}
+            >
+              交流与反馈
+            </span>
+            <h2>你的声音，是星球前进的动力</h2>
+            <p>通过以下入口与 CodeBuddy 保持连接，问题与建议我们都想听到</p>
+          </div>
+          <div className="feedback-grid">
+            {FEEDBACK_CHANNELS.map((ch, i) => (
+              <a
+                key={ch.title}
+                className="feedback-card glass reveal"
+                href={ch.url}
+                target="_blank"
+                rel="noreferrer"
+                style={{ transitionDelay: `${i * 70}ms` }}
+              >
+                <span className="feedback-icon">{CHANNEL_ICONS[ch.icon]}</span>
+                <span className="feedback-body">
+                  <strong>{ch.title}</strong>
+                  <span>{ch.desc}</span>
+                </span>
+                <span className="feedback-go">
+                  前往
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7M9 7h8v8" />
+                  </svg>
+                </span>
+              </a>
+            ))}
+          </div>
+          <div className="feedback-note glass reveal">
+            <span className="pulse-dot" />
+            想提问题或建议？在公众号文章评论区留言、或后台私信「腾讯 CodeBuddy」，我们都会认真阅读
+          </div>
+        </section>
 
         {/* 快速体验通道 */}
         <section id="try" className="try-section">
